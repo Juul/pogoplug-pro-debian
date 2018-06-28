@@ -182,7 +182,7 @@ Mount the partition:
 sudo mount /dev/sdX1 /mnt
 ```
 
-Download the rootfs archive from the releases page of [this repository](https://github.com/Juul/pogoplug-pro-debian):
+Download the rootfs archive from the releases page of [this repository](https://github.com/Juul/pogoplug-pro-debian) or just click [this link](https://github.com/Juul/pogoplug-pro-debian/releases/download/untagged-19b01689ddfb8e025cef/Debian-4.4.54-oxnas-tld-1-rootfs-bodhi.tar.bz2).
 
 Extract the rootfs archive:
 
