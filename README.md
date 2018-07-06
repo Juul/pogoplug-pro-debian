@@ -373,4 +373,85 @@ Then test it with:
 ifup -v wlp0s0
 ```
 
+# Running an anonymous ftp server
+
+Install the vsftpd sever:
+
+```
+sudo apt install vsftpd
+```
+
+Use the `vsftpd.conf` from this git repo:
+
+```
+sudo cp ./vsftpd.conf /etc/
+```
+
+The directory shared via ftp will be `/srv/ftp`. You can change this by altering the `ftp` users' home directory in `/etc/passwd`.
+
+If you want to share an external drive then first partition it, then format it and give it a unique label. Let's assume it's called `/dev/sdb`.
+
+__WARNING THE FOLLOWING WILL DELETE EVERYTHIN ON THE DRIVE__
+
+To partition run `sudo fdisk /dev/sdb`, then hit `d` and enter again until there are no partitions left. Now hit `c` to create a partition and hit enter for each question to accept the defaults, then hit `w` to write the changes to disk.
+
+Now format the drive:
+
+```
+# WARNING THIS WILL DELETE EVERYTHINg ON THE DRIVE
+
+sudo mkfs.ext4 -L my-labeled-drive /dev/sdb1
+```
+
+To make the drive automatically mount in the ftp directory on boot add the following line to `/etc/fstab`:
+
+```
+LABEL=my-labeled-drive /srv/ftp        ext4    noatime,errors=remount-ro 0 2
+```
+
+Now mount it to ensure that the fstab line works:
+
+```
+sudo mount /srv/ftp
+```
+
+While the drive is mounted, set the permissions:
+
+```
+sudo chown root.ftp /srv/ftp
+sudo chmod 755 /srv/ftp
+```
+
+If you want users to be able to upload to an `uploads` directory then do:
+
+```
+sudo mkdir /srv/ftp/uploads
+sudo chown ftp.ftp /srv/ftp/uploads
+sudo chmod 755 /srv/ftp/uploads
+```
+
+by default no-one will be able to delete from the `uploads/` directory. To change this modify the line in `/etc/vsftpd.conf` saying `chown_uploads=YES` to `chown_uploads=NO`. Note that this will allow anyone to delete anything in the uploads directory.
+
+Now restart vsftpd to make it use the new configuration:
+
+```
+sudo /etc/init.d/vsftpd restart
+```
+
+Create a test file to download:
+
+```
+sudo echo "Welcome to my ftp server!" > /srv/ftp/README
+```
+
+Test that you can connect to the ftp server using e.g. `ncftp` from another computer and download and upload
+
+```
+sudo apt install ncftp
+echo "TEST UPLOAD CONTENT" > test
+ncftp <ip_address_of_pogogplug>
+get README
+cd uploads/
+put test
+```
 
