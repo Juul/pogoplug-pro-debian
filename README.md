@@ -1,6 +1,8 @@
 
 This is a guide for installing Debian GNU/Linux on a Pogoplug Pro.
 
+This is not the official source for any of the mentioned binaries, it is simply an unofficial mirror and an alternate guide. The official source is [bohdi's posts on the doozan forum](https://forum.doozan.com/read.php?2,16044).
+
 # Sources
 
 All of this was gathered from other sources. The only thing I made is this readme file.
@@ -182,13 +184,13 @@ Mount the partition:
 sudo mount /dev/sdX1 /mnt
 ```
 
-Download the rootfs archive from the releases page of [this repository](https://github.com/Juul/pogoplug-pro-debian) or just click [this link](https://github.com/Juul/pogoplug-pro-debian/releases/download/untagged-19b01689ddfb8e025cef/Debian-4.4.54-oxnas-tld-1-rootfs-bodhi.tar.bz2).
+Download the rootfs archive from the releases page of [this repository](https://github.com/Juul/pogoplug-pro-debian).
 
 Extract the rootfs archive:
 
 ```
 cd /mnt
-sudo tar xvjf /path/to/Debian-4.4.54-oxnas-tld-1-rootfs-bodhi.tar.bz2
+sudo tar xvjf /path/to/Debian-4.14.180-oxnas-tld-1-rootfs-bodhi.tar.bz2
 ```
 
 Adjust the rootfs line in fstab by editing `/mnt/etc/fstab`, changing 'ext3' to 'ext4':
@@ -247,21 +249,21 @@ fw_setenv ethaddr 12:3b:54:af:43:11
 From your compter, scp the kernel to the PogoPlug:
 
 ```
-scp linux-4.4.124-oxnas-tld-1.bodhi.tar.bz2 root@192.168.1.2:/boot/
+scp linux-5.4.224-oxnas-tld-1.bodhi.tar.bz2 root@192.168.1.2:/boot/
 ```
 
 On the PogoPlug, extract the files:
 
 ```
 cd /boot
-tar xvjf linux-4.4.124-oxnas-tld-1.bodhi.tar.bz2
-tar xf linux-dtb-4.4.124-oxnas-tld-1.tar
+tar xvjf linux-5.4.224-oxnas-tld-1.bodhi.tar.bz2
+tar xf linux-dtb-5.4.224-oxnas-tld-1.tar
 ```
 
 Install the new kernel:
 
 ```
-dpkg -i linux-image-4.4.124-oxnas-tld-1_1.0_armel.deb
+dpkg -i linux-image-5.4.224-oxnas-tld-1_1.0_armel.deb
 ```
 
 Backup old uImage and uInitrd:
@@ -274,8 +276,8 @@ mv uInitrd uInitrd.bak
 Create new uImage and uInitrd:
 
 ```
-mkimage -A arm -O linux -T kernel -C none -a 0x60008000 -e 0x60008000 -n Linux-4.4.124-oxnas-tld-1 -d vmlinuz-4.4.124-oxnas-tld-1 uImage
-mkimage -A arm -O linux -T ramdisk -C gzip -a 0x60000000 -e 0x60000000 -n initramfs-4.4.124-oxnas-tld-1  -d initrd.img-4.4.124-oxnas-tld-1 uInitrd
+mkimage -A arm -O linux -T kernel -C none -a 0x60008000 -e 0x60008000 -n Linux-5.4.224-oxnas-tld-1 -d vmlinuz-5.4.224-oxnas-tld-1 uImage
+mkimage -A arm -O linux -T ramdisk -C gzip -a 0x60000000 -e 0x60000000 -n initramfs-5.4.224-oxnas-tld-1  -d initrd.img-5.4.224-oxnas-tld-1 uInitrd
 ```
 
 Clean up:
